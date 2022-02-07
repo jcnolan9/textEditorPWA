@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
@@ -27,7 +28,11 @@ module.exports = () => {
       //   swSrc: './src-sw.js',
       //   swDest: 'service-worker.js'
       // })
-      new GenerateSW(),
+      new MiniCssExtractPlugin(),
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
+      }),
       new WebpackPwaManifest({
         name: 'Just Another Text Editor',
         short_name: 'JATE',
@@ -58,7 +63,8 @@ module.exports = () => {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env']
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
             }
           }
         },
